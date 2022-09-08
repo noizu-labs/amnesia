@@ -16,6 +16,9 @@ defmodule Amnesia.Table do
   alias Amnesia.Table.Match
   alias Amnesia.Helper.Options
 
+  
+  @enable_rock Code.ensure_loaded?(:rocksdb)
+  
   @doc """
   Wait for the passed tables for the given timeout, see `mnesia:wait_for_tables`.
   """
@@ -65,7 +68,8 @@ defmodule Amnesia.Table do
     + `:memory` => `:ram_copies`
     + `:disk`   => `:disc_copies`
     + `:disk!`  => `:disc_only_copies`
-
+    + `:rock!`  => `:rocksdb_copies` -- [Will be moved to a formal plug-in, extension system - noizu]
+    
   * `:fragmentation` => `:frag_properties` _(a keyword list composed of)_
     + `:number`  => `:n_fragments`
     + `:nodes`   => `:node_pool`
@@ -79,14 +83,18 @@ defmodule Amnesia.Table do
       - `:memory` => `:n_ram_copies`
       - `:disk`   => `:n_disc_copies`
       - `:disk!`  => `:n_disc_only_copies`
-
+    
     [@see storage options](http://erlang.org/doc/man/mnesia.html#create_table "storage_settings options")
     [@see ets options](http://erlang.org/doc/man/ets.html#new-2 "ets options")
     [@see dets options](http://erlang.org/doc/man/dets.html#init_table-3 "dets options")
     + :ets_options =>  `:compressed`
     + :dets_options => `{:auto_save, 5000}`
-
     + :compressed => `true`
+    
+    [@see rock options](https://github.com/aeternity/mnesia_rocksdb/blob/g3553-refactor-plugin-migration-tmp-220318/doc/README.md#Customization "rocksdb options")
+    + :rock_options => `plugin specific` -- [Will be moved to a formal plug-in, extension system, each plugin should expose it's own option set even if folded into user_props internalls - noizu]
+  
+    
   """
   @spec create(atom) :: o
   @spec create(atom, c) :: o
@@ -103,7 +111,18 @@ defmodule Amnesia.Table do
       |> Options.update(:ram_copies,       definition[:copying][:memory])
       |> Options.update(:disc_copies,      definition[:copying][:disk])
       |> Options.update(:disc_only_copies, definition[:copying][:disk!])
+      # Will be moved to plugin system -- noizu
+      |> Options.update(:rocksdb_copies, definition[:copying][:rock!])
 
+    
+    # rocksdb plugin  - noizu
+    args = case definition[:rock_options] do
+             rock_options when is_list(rock_options) ->
+               args
+               |> update_in([:user_properties], &(&1 || []))
+               |> update_in([:user_properties, :rocksdb_opts], rock_options)
+             _ -> args
+           end
 
     ets_options = cond do
       definition[:ets_options] ->
@@ -229,6 +248,9 @@ defmodule Amnesia.Table do
         :ram_copies       -> :memory
         :disc_copies      -> :disk
         :disc_only_copies -> :disk!
+        #plugin
+        :rocksdb_copies   -> :rock!
+        
         :unknown          -> :remote
       end,
 
@@ -319,6 +341,9 @@ defmodule Amnesia.Table do
       :disk   -> :disc_copies
       :disk!  -> :disc_only_copies
       :memory -> :ram_copies
+      # plugin
+      :rock!  -> :rocksdb_copies
+      
     end) |> result
   end
 

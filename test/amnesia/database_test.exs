@@ -1,10 +1,29 @@
 Code.require_file "../test_helper.exs", __DIR__
 
+
 use Amnesia
 
 defdatabase Test.Database do
+  @rock_extension Code.ensure_compiled?(:mnesia_rocksdb)
   deftable User
 
+
+
+  
+  if @rock_extension do
+    deftable RockTable, [:user_id, :content], type: :set, copying: :rock! do
+      def user(self) do
+        User.read(self.user_id)
+      end
+    
+      def user!(self) do
+        User.read!(self.user_id)
+      end
+    end
+  end
+  
+  
+  
   deftable Message, [:user_id, :content], type: :bag do
     def user(self) do
       User.read(self.user_id)
@@ -46,6 +65,20 @@ defmodule DatabaseTest do
   alias Amnesia.Selection
   alias Amnesia.Table.Stream
 
+
+  @rock_extension Code.ensure_compiled?(:mnesia_rocksdb)
+  if @rock_extension do
+    test "rocksdb smoke test" do
+      Test.Database.RockTable.destroy!()
+      Test.Database.RockTable.create!(rock!: [node()])
+      Test.Database.Message.create(memory: [node()])
+      a = Test.Database.RockTable.info(:all)
+      assert a[:storage_type] == {:ext, :rocksdb_copies, :mnesia_rocksdb}
+      assert a[:storage_type] == {:ext, :rocksdb_copies, :mnesia_rocksdb}
+      b = Test.Database.Message.info(:all) |> IO.inspect
+    end
+  end
+  
   test "match can use variables" do
     user = Amnesia.transaction! do
       %User{id: 23} |> User.write

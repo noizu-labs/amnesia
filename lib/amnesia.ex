@@ -17,16 +17,28 @@ defmodule Amnesia do
     end
   end
 
+  
+  @rock_extension Code.ensure_compiled?(:mnesia_rocksdb)
+  
   require Amnesia.Helper
 
   @doc """
   Start the database, see `mnesia:start`.
   """
   @spec start :: :ok | { :error, any }
-  def start do
-    :mnesia.start
+  if @rock_extension do
+    def start do
+      :mnesia.start
+      :mnesia_rocksdb.register()
+    end
+  else
+    def start do
+      :mnesia.start
+    end
   end
+  
 
+  
   @doc """
   Stop the database, see `mnesia:stop`.
   """

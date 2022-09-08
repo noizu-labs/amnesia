@@ -1,7 +1,11 @@
 %{
   "continuum": {:git, "git://github.com/meh/continuum.git", "4125f9d428971568f16da78cec24fddce18d6eca", []},
   "datastructures": {:git, "git://github.com/meh/elixir-datastructures.git", "28a7aee9addfe521ad0aa62f5e54f1ad597356cc", []},
-  "earmark": {:hex, :earmark, "1.2.0", "bf1ce17aea43ab62f6943b97bd6e3dc032ce45d4f787504e3adf738e54b42f3a", [:mix], []},
-  "ex_doc": {:hex, :ex_doc, "0.15.0", "e73333785eef3488cf9144a6e847d3d647e67d02bd6fdac500687854dd5c599f", [:mix], [{:earmark, "~> 1.1", [hex: :earmark, optional: false]}]},
+  "earmark": {:hex, :earmark, "1.2.0", "bf1ce17aea43ab62f6943b97bd6e3dc032ce45d4f787504e3adf738e54b42f3a", [:mix], [], "hexpm", "6709251dd10e70cca0d50be8a25adc38c701b39eac2da3b1c166e3e7e4d358ed"},
+  "ex_doc": {:hex, :ex_doc, "0.15.0", "e73333785eef3488cf9144a6e847d3d647e67d02bd6fdac500687854dd5c599f", [:mix], [{:earmark, "~> 1.1", [hex: :earmark, repo: "hexpm", optional: false]}], "hexpm", "e5ea59f50ecdfe4cc755808450dafe35221d5a0f4a31c42e80a7188eca570e4c"},
   "exquisite": {:git, "https://github.com/noizu/exquisite.git", "61d48f8c4eeb90ab0cafe9a4d98bdb2820db295d", [ref: "61d48f8"]},
+  "hut": {:hex, :hut, "1.3.0", "71f2f054e657c03f959cf1acc43f436ea87580696528ca2a55c8afb1b06c85e7", [:"erlang.mk", :rebar, :rebar3], [], "hexpm", "7e15d28555d8a1f2b5a3a931ec120af0753e4853a4c66053db354f35bf9ab563"},
+  "mnesia_rocksdb": {:git, "https://github.com/aeternity/mnesia_rocksdb.git", "ab15b7f3990fd87be313d9a2944d8ed9bebc8a5d", [ref: "ab15b7f3990"]},
+  "rocksdb": {:git, "https://gitlab.com/seanhinde/erlang-rocksdb.git", "9ae378391ffc94200bde24efcd7a4921eba688d0", [ref: "9ae37839"]},
+  "sext": {:hex, :sext, "1.8.0", "90a95b889f5c781b70bbcf44278b763148e313c376b60d87ce664cb1c1dd29b5", [:rebar3], [], "hexpm", "bc6016cb8690baf677eacacfe6e7cadfec8dc7e286cbbed762f6cd55b0678e73"},
 }
