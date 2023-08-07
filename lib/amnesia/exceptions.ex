@@ -14,6 +14,14 @@ defmodule Amnesia.TableExistsError do
   end
 end
 
+defmodule Amnesia.LocalTableSyncError do
+  defexception table: nil, message: nil
+
+  def exception(table: table) do
+    %__MODULE__{table: table, message: "LocalTable #{inspect table} record not synchronized"}
+  end
+end
+
 defmodule Amnesia.TableMissingError do
   defexception message: nil
 

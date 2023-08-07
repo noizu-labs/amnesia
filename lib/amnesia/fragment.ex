@@ -84,6 +84,7 @@ defmodule Amnesia.Fragment do
         copying: [
           memory: :mnesia.table_info(name, :n_ram_copies),
           disk:   :mnesia.table_info(name, :n_disc_copies),
+          rock!:   :mnesia.table_info(name, :n_rocksdb_copies),
           disk!:  :mnesia.table_info(name, :n_disc_only_copies)
         ],
 

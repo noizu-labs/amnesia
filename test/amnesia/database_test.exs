@@ -1,6 +1,19 @@
 Code.require_file "../test_helper.exs", __DIR__
 
 
+defmodule ExtensionTest do
+  defmacro __using__(opts \\ nil) do
+    quote do
+      def read!(key) do
+        :extended
+      end
+      def alternative_read!(key) do
+        :hello
+      end
+    end
+  end
+end
+
 use Amnesia
 
 defdatabase Test.Database do
@@ -22,7 +35,13 @@ defdatabase Test.Database do
     end
   end
   
-  
+  deftable ExtendedTable, [:identifier, :content], type: :set, extensions: :enabled do
+    @type t :: %__MODULE__{
+                 identifier: any,
+                 content: any
+               }
+    use ExtensionTest
+  end
   
   deftable Message, [:user_id, :content], type: :bag do
     def user(self) do
@@ -78,7 +97,12 @@ defmodule DatabaseTest do
       b = Test.Database.Message.info(:all) |> IO.inspect
     end
   end
-  
+
+  test "user should be able to extend schema definitions to inject additional hooks and callbacks" do
+    assert Test.Database.ExtendedTable.read!(:apple) == :extended
+    assert Test.Database.ExtendedTable.alternative_read!(:apple) == :hello
+  end
+
   test "match can use variables" do
     user = Amnesia.transaction! do
       %User{id: 23} |> User.write

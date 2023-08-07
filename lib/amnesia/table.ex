@@ -83,6 +83,7 @@ defmodule Amnesia.Table do
       - `:memory` => `:n_ram_copies`
       - `:disk`   => `:n_disc_copies`
       - `:disk!`  => `:n_disc_only_copies`
+      - `:rock!` => `:n_rocksdb_copies`
     
     [@see storage options](http://erlang.org/doc/man/mnesia.html#create_table "storage_settings options")
     [@see ets options](http://erlang.org/doc/man/ets.html#new-2 "ets options")
@@ -151,6 +152,7 @@ defmodule Amnesia.Table do
         |> Options.update(:node_pool,           fragmentation[:nodes])
         |> Options.update(:n_ram_copies,        fragmentation[:copying][:memory])
         |> Options.update(:n_disc_copies,       fragmentation[:copying][:disk])
+        |> Options.update(:n_rocksdb_copies,    fragmentation[:copying][:rock!])
         |> Options.update(:n_disc_only_copies,  fragmentation[:copying][:disk!])
         |> Options.update(:foreign_key,         fragmentation[:foreign][:key])
         |> Options.update(:hash_module,         fragmentation[:hash][:module])
@@ -378,6 +380,7 @@ defmodule Amnesia.Table do
       :disk   -> :disc_copies
       :disk!  -> :disc_only_copies
       :memory -> :ram_copies
+      :rock!  -> :rocksdb_copies
     end) |> result
   end
 
