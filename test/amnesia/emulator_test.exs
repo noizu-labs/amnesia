@@ -1,10 +1,3 @@
-#-------------------------------------------------------------------------------
-# Author: Keith Brings
-# Copyright (C) 2019 Noizu Labs, Inc. All rights reserved.
-#-------------------------------------------------------------------------------
-
-
-
 defmodule MockDB do
   use Amnesia.Emulator
   mockdatabase Database,
