@@ -1,19 +1,5 @@
 Code.require_file "../test_helper.exs", __DIR__
 
-
-defmodule ExtensionTest do
-  defmacro __using__(opts \\ nil) do
-    quote do
-      def read!(key) do
-        :extended
-      end
-      def alternative_read!(key) do
-        :hello
-      end
-    end
-  end
-end
-
 use Amnesia
 
 defdatabase Test.Database do
@@ -22,27 +8,19 @@ defdatabase Test.Database do
 
 
 
-  
+
   if @rock_extension do
     deftable RockTable, [:user_id, :content], type: :set, copying: :rock! do
       def user(self) do
         User.read(self.user_id)
       end
-    
+
       def user!(self) do
         User.read!(self.user_id)
       end
     end
   end
-  
-  deftable ExtendedTable, [:identifier, :content], type: :set, extensions: :enabled do
-    @type t :: %__MODULE__{
-                 identifier: any,
-                 content: any
-               }
-    use ExtensionTest
-  end
-  
+
   deftable Message, [:user_id, :content], type: :bag do
     def user(self) do
       User.read(self.user_id)
@@ -94,14 +72,11 @@ defmodule DatabaseTest do
       a = Test.Database.RockTable.info(:all)
       assert a[:storage_type] == {:ext, :rocksdb_copies, :mnesia_rocksdb}
       assert a[:storage_type] == {:ext, :rocksdb_copies, :mnesia_rocksdb}
-      b = Test.Database.Message.info(:all) |> IO.inspect
+      _b = Test.Database.Message.info(:all)
+      #...
     end
   end
 
-  test "user should be able to extend schema definitions to inject additional hooks and callbacks" do
-    assert Test.Database.ExtendedTable.read!(:apple) == :extended
-    assert Test.Database.ExtendedTable.alternative_read!(:apple) == :hello
-  end
 
   test "match can use variables" do
     user = Amnesia.transaction! do

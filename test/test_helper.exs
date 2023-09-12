@@ -18,4 +18,6 @@ defmodule Amnesia.Test do
   end
 end
 
+Logger.configure(level: :info)
+
 ExUnit.start

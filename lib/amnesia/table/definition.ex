@@ -80,10 +80,7 @@ defmodule Amnesia.Table.Definition do
     end
 
     quote do
-      Module.put_attribute(__MODULE__, :in_defdatabase, Module.get_attribute(__MODULE__, :in_defdatabase, __MODULE__))
-      in_defdb = @in_defdatabase
       defmodule unquote(name) do
-        Module.put_attribute(__MODULE__, :in_defdatabase, Module.get_attribute(__MODULE__, :in_defdatabase, in_defdb))
         defstruct unquote(attributes)
 
         use Amnesia.Hooks, write: 1, write!: 1, read: 2, read!: 2
