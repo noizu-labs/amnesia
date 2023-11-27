@@ -108,6 +108,17 @@ defmodule Amnesia.Table.Definition do
           end
         end
 
+        def telemetry_track(table, action) do
+          telemetry = :persistent_term.get(:amnesia_telemetry, %{})
+          cond do
+            telemetry[table][action] -> :nop
+            :else ->
+            telemetry = put_in(telemetry, [Access.key(table, %{}), Access.key(action)], true)
+            :persistent_term.put(:amnesia_telemetry, telemetry)
+          end
+
+        end
+
         @doc """
         Return the database the table belongs to.
         """
@@ -381,6 +392,7 @@ defmodule Amnesia.Table.Definition do
         """
         @spec clear :: T.o
         def clear do
+          telemetry_track(__MODULE__, :clear)
           T.clear(__MODULE__)
         end
 
@@ -389,6 +401,7 @@ defmodule Amnesia.Table.Definition do
         """
         @spec member?(any) :: boolean
         def member?(key) do
+          telemetry_track(__MODULE__, :member?)
           T.member?(__MODULE__, key)
         end
 
@@ -397,6 +410,7 @@ defmodule Amnesia.Table.Definition do
         """
         @spec count :: non_neg_integer
         def count do
+          telemetry_track(__MODULE__, :count)
           T.count(__MODULE__)
         end
 
@@ -414,6 +428,7 @@ defmodule Amnesia.Table.Definition do
           @spec read(any) :: [t] | nil | no_return
           @spec read(any, :read | :write | :write!) :: [t] | nil | no_return
           def read(key, lock \\ :read) do
+            telemetry_track(__MODULE__, :read)
             records = coerce(T.read(__MODULE__, key, lock))
 
             case hook_read(key, records) do
@@ -430,6 +445,7 @@ defmodule Amnesia.Table.Definition do
           """
           @spec read!(any) :: [t] | nil | no_return
           def read!(key) do
+            telemetry_track(__MODULE__, :read!)
             records = coerce(T.read!(__MODULE__, key))
 
             case hook_read!(key, records) do
@@ -455,6 +471,7 @@ defmodule Amnesia.Table.Definition do
           @spec read(any) :: t | nil | no_return
           @spec read(any, :read | :write | :write!) :: t | nil | no_return
           def read(key, lock \\ :read) do
+            telemetry_track(__MODULE__, :read)
             record = case T.read(__MODULE__, key, lock) do
               [r] -> coerce(r)
               _   -> nil
@@ -476,6 +493,7 @@ defmodule Amnesia.Table.Definition do
           """
           @spec read!(any) :: t | nil | no_return
           def read!(key) do
+            telemetry_track(__MODULE__, :read!)
             record = case T.read!(__MODULE__, key) do
               [r] -> coerce(r)
               _   -> nil
@@ -514,6 +532,7 @@ defmodule Amnesia.Table.Definition do
         """
         @spec keys :: list | no_return
         def keys do
+          telemetry_track(__MODULE__, :keys)
           T.keys(__MODULE__)
         end
 
@@ -522,6 +541,7 @@ defmodule Amnesia.Table.Definition do
         """
         @spec keys! :: list | no_return
         def keys! do
+          telemetry_track(__MODULE__, :keys!)
           T.keys!(__MODULE__)
         end
 
@@ -696,6 +716,7 @@ defmodule Amnesia.Table.Definition do
         """
         @spec select(any) :: T.Selection.t | nil | no_return
         def select(spec) do
+          telemetry_track(__MODULE__, :select)
           T.select(__MODULE__, spec)
         end
 
@@ -705,6 +726,7 @@ defmodule Amnesia.Table.Definition do
         """
         @spec select(integer | :read | :write, any) :: T.Selection.t | nil | no_return
         def select(lock_or_limit, spec) do
+          telemetry_track(__MODULE__, :select)
           T.select(__MODULE__, lock_or_limit, spec)
         end
 
@@ -714,6 +736,7 @@ defmodule Amnesia.Table.Definition do
         """
         @spec select(integer | :read | :write, integer | :read | :write, integer) :: T.Selection.t | nil | no_return
         def select(lock_or_limit, limit_or_lock, spec) do
+          telemetry_track(__MODULE__, :select)
           T.select(__MODULE__, lock_or_limit, limit_or_lock, spec)
         end
 
@@ -723,6 +746,7 @@ defmodule Amnesia.Table.Definition do
         """
         @spec select!(any) :: Selection.t | nil | no_return
         def select!(spec) do
+          telemetry_track(__MODULE__, :select!)
           T.select!(__MODULE__, spec)
         end
 
@@ -739,6 +763,7 @@ defmodule Amnesia.Table.Definition do
 
         """
         defmacro where(spec, options \\ []) do
+          telemetry_track(__MODULE__, :where)
           options = Keyword.put(options, :where, spec)
           lock = options[:lock]
           limit = options[:limit]
@@ -778,6 +803,7 @@ defmodule Amnesia.Table.Definition do
 
         """
         defmacro where!(spec, options \\ []) do
+          telemetry_track(__MODULE__, :where!)
           options = Keyword.put(options, :where, spec)
 
           quote do
@@ -793,6 +819,7 @@ defmodule Amnesia.Table.Definition do
         @spec match(any)                 :: [t] | nil | no_return
         @spec match(:read | :write, any) :: [t] | nil | no_return
         def match(lock \\ :read, pattern) do
+          telemetry_track(__MODULE__, :match)
           T.match(__MODULE__, lock, D.match(__MODULE__, pattern))
             |> S.coerce(__MODULE__)
         end
@@ -803,6 +830,7 @@ defmodule Amnesia.Table.Definition do
         """
         @spec match!(any) :: [t] | nil | no_return
         def match!(pattern) do
+          telemetry_track(__MODULE__, :match!)
           T.match!(__MODULE__, D.match(__MODULE__, pattern))
             |> S.coerce(__MODULE__)
         end
@@ -829,6 +857,7 @@ defmodule Amnesia.Table.Definition do
         @spec stream :: T.Stream.t
         @spec stream(:read | :write | :write!) :: T.Stream.t
         def stream(lock \\ :read) do
+          telemetry_track(__MODULE__, :stream)
           T.stream(__MODULE__, lock)
         end
 
@@ -838,6 +867,7 @@ defmodule Amnesia.Table.Definition do
         """
         @spec stream! :: T.Stream.t
         def stream! do
+          telemetry_track(__MODULE__, :stream!)
           T.stream!(__MODULE__)
         end
 
@@ -865,6 +895,7 @@ defmodule Amnesia.Table.Definition do
         """
         @spec delete(atom | any, t | atom) :: :ok | no_return
         def delete(%__MODULE__{} = self, lock) do
+          telemetry_track(__MODULE__, :delete)
           :mnesia.delete_object(__MODULE__, coerce(self), case lock do
             :write  -> :write
             :write! -> :sticky_write
@@ -872,6 +903,7 @@ defmodule Amnesia.Table.Definition do
         end
 
         def delete(key, lock) do
+          telemetry_track(__MODULE__, :delete)
           :mnesia.delete(__MODULE__, key, case lock do
             :write  -> :write
             :write! -> :sticky_write
@@ -884,10 +916,12 @@ defmodule Amnesia.Table.Definition do
         """
         @spec delete!(t | any) :: :ok | no_return
         def delete!(%__MODULE__{} = self) do
+          telemetry_track(__MODULE__, :delete!)
           :mnesia.dirty_delete_object(__MODULE__, coerce(self))
         end
 
         def delete!(key) do
+          telemetry_track(__MODULE__, :delete!)
           T.delete!(__MODULE__, key)
         end
 
@@ -899,6 +933,7 @@ defmodule Amnesia.Table.Definition do
         """
         @spec write(t) :: t | no_return
         def write(self, lock \\ :write) do
+          telemetry_track(__MODULE__, :write)
           self = D.autoincrement(__MODULE__, @database, @autoincrement, self)
 
           case hook_write(self) do
@@ -920,6 +955,7 @@ defmodule Amnesia.Table.Definition do
         """
         @spec write!(t) :: t | no_return
         def write!(self) do
+          telemetry_track(__MODULE__, :write!)
           self = D.autoincrement(__MODULE__, @database, @autoincrement, self)
 
           case hook_write!(self) do
@@ -961,6 +997,11 @@ defmodule Amnesia.Table.Definition do
             create: 0,
             wait: 0,
             wait: 1,
+            telemetry_track: 2
+          ]
+          else
+          defoverridable [
+            telemetry_track: 2
           ]
         end
 
