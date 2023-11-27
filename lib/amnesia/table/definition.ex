@@ -109,12 +109,12 @@ defmodule Amnesia.Table.Definition do
         end
 
         def telemetry_track(table, _action) do
-          telemetry = :persistent_term.get(:amnesia_telemetry, %{})
+          telemetry = :persistent_term.get(:amnesia_table_telemetry, %{})
           cond do
             telemetry[table] -> :nop
             :else ->
               telemetry = put_in(telemetry, [Access.key(table)], true)
-              :persistent_term.put(:amnesia_telemetry, telemetry)
+              :persistent_term.put(:amnesia_table_telemetry, telemetry)
           end
         end
 
