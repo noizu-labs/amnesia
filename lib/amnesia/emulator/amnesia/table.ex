@@ -84,6 +84,8 @@ defmodule Amnesia.Emulator.Table do
 
         def __mock_methods__(mock_configuration) do
           [
+            keys: fn() -> keys(mock_configuration) end,
+            keys!: fn() -> keys!(mock_configuration) end,
             read: fn(key) -> read(mock_configuration, key) end,
             read!: fn(key) -> read!(mock_configuration, key) end,
             write: fn(record) -> write(mock_configuration, record) end,
@@ -95,6 +97,8 @@ defmodule Amnesia.Emulator.Table do
           ]
         end
 
+        defdelegate keys(settings), to: Amnesia.Emulator.Table.Mock
+        defdelegate keys!(settings), to: Amnesia.Emulator.Table.Mock
         defdelegate read(settings, key), to: Amnesia.Emulator.Table.Mock
         defdelegate read!(settings, key), to: Amnesia.Emulator.Table.Mock
         defdelegate write(settings, key), to: Amnesia.Emulator.Table.Mock
@@ -107,6 +111,8 @@ defmodule Amnesia.Emulator.Table do
 
         defoverridable [
           __mock_methods__: 1,
+          keys: 1,
+          keys!: 1,
           read: 2,
           read!: 2,
           write: 2,
