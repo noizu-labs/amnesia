@@ -108,6 +108,19 @@ defmodule Noizu.Emulator.AmnesiaTest do
       end
     end
 
+    @tag :wip
+    test "Keys" do
+      MockDB.start()
+      assert MockDB.Database.tables() == [TestDB.DummyBTable, TestDB.DummyATable]
+      with_mocks([
+        MockDB.Database.mock(),
+        MockDB.Database.DummyATable.mock(),
+        MockDB.Database.DummyBTable.mock(),
+      ]) do
+        sut = TestDB.DummyATable.keys!()
+        assert sut == [1]
+      end
+    end
 
     @tag :wip
     test "Events" do
@@ -123,6 +136,7 @@ defmodule Noizu.Emulator.AmnesiaTest do
         TestDB.DummyBTable.delete!(b)
         TestDB.DummyATable.read!(1)
         TestDB.DummyBTable.read!(1)
+        TestDB.DummyBTable.keys!()
         events = MockDB.__history__()
         assert events == [
                  {1, {:write!, {TestDB.DummyATable, 1}}},
@@ -130,6 +144,7 @@ defmodule Noizu.Emulator.AmnesiaTest do
                  {3, {:delete!, {TestDB.DummyBTable, 1}}},
                  {4, {:read!, {TestDB.DummyATable, 1}}},
                  {5, {:read!, {TestDB.DummyBTable, 1}}},
+                 {6, {:keys!, {TestDB.DummyBTable}}},
                ]
 
         events = MockDB.__table_history__(TestDB.DummyATable)

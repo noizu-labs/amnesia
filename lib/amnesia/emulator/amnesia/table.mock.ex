@@ -51,6 +51,38 @@ defmodule  Amnesia.Emulator.Table.Mock do
   end
 
 
+  #-----------------------------
+  #
+  #-----------------------------
+  def keys!(mock_configuration = emulator_session(emulator: emulator, table: table)) do
+    Agent.get_and_update(apply(emulator, :emulator_handle, [mock_configuration]), fn(state) ->
+      event = state.event + 1
+      state = state
+              |> add_event(event, {:keys!, {table}})
+              |> add_table_event(table, event, {:keys!})
+
+      records = get_in(state, [Access.key(:tables), table, Access.key(:records)])
+      keys = Map.keys(records)
+      {keys, state}
+    end)
+  end
+
+  def keys(mock_configuration = emulator_session(emulator: emulator, table: table)) do
+    Agent.get_and_update(apply(emulator, :emulator_handle, [mock_configuration]), fn(state) ->
+      event = state.event + 1
+      state = state
+              |> add_event(event, {:keys, {table}})
+              |> add_table_event(table, event, {:keys})
+
+      records = get_in(state, [Access.key(:tables), table, Access.key(:records)])
+      keys = Map.keys(records)
+      {keys, state}
+    end)
+  end
+
+  #-----------------------------
+  #
+  #-----------------------------
   def write!(mock_configuration = emulator_session(table: table, table_settings: settings), record) do
     key_field = (settings[:key] || List.first(table.info(:attributes)))
     key = get_in(record, [Access.key(key_field)])
