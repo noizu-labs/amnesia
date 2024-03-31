@@ -801,7 +801,6 @@ defmodule Amnesia.Table.Definition do
 
         """
         defmacro where!(spec, options \\ []) do
-          apply(unquote(__MODULE__), :telemetry_track, [unquote(__MODULE__), :where!])
           options = Keyword.put(options, :where, spec)
 
           quote do
