@@ -2,7 +2,7 @@ defmodule Amnesia.Mixfile do
   use Mix.Project
 
   def project do
-    [ app: :amnesia,
+    [ app: :nuamnesia,
       version: "0.2.11",
       deps: deps(),
       package: package(),
@@ -12,9 +12,9 @@ defmodule Amnesia.Mixfile do
   end
 
   defp package do
-    [ maintainers: ["meh"],
+    [ maintainers: ["noizu"],
       licenses: ["WTFPL"],
-      links: %{"GitHub" => "https://github.com/meh/amnesia"} ]
+      links: %{"GitHub" => "https://github.com/noizu-labs/amnesia"} ]
   end
 
   def application do
@@ -32,7 +32,7 @@ defmodule Amnesia.Mixfile do
       { :ex_doc, "~> 0.15", only: [:dev] },
 
       {:sext, "~> 1.8.0", optional: true},
-      {:mnesia_rocksdb, github: "aeternity/mnesia_rocksdb", ref: "ab15b7f3990", optional: true},
+      #{:mnesia_rocksdb, github: "aeternity/mnesia_rocksdb", ref: "ab15b7f3990", optional: true},
       {:mock, "~> 0.3.1", only: [:test], optional: true},
     ]
   end

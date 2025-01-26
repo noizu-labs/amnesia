@@ -1,5 +1,15 @@
-amnesia - mnesia wrapper for Elixir
+nuamnesia - mnesia wrapper for Elixir
 ===================================
+
+
+**Hijack of Amnesia Namespace for hex packaging of our changes**
+
+Include aeternity/mnesia_rocksdb dep if you wish to leverage rocksdb storage backends.
+
+------
+
+
+
 amnesia wraps everything exposed by mnesia, from fragments to fragment hash,
 access and backup behaviors.
 
