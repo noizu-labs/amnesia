@@ -16,9 +16,6 @@ defmodule Amnesia.Table do
   alias Amnesia.Table.Match
   alias Amnesia.Helper.Options
 
-  
-  @enable_rock Code.ensure_loaded?(:rocksdb)
-  
   @doc """
   Wait for the passed tables for the given timeout, see `mnesia:wait_for_tables`.
   """
@@ -572,7 +569,7 @@ defmodule Amnesia.Table do
   @spec at!(atom, integer) :: tuple | nil | no_return
   def at!(name, position) do
     case :mnesia.dirty_slot(name, position) do
-      :'$end_of_table' -> nil
+      :"$end_of_table" -> nil
       value            -> value
     end
   end
@@ -583,7 +580,7 @@ defmodule Amnesia.Table do
   @spec first(atom) :: any | nil | no_return
   def first(name) do
     case :mnesia.first(name) do
-      :'$end_of_table' -> nil
+      :"$end_of_table" -> nil
       value            -> value
     end
   end
@@ -594,7 +591,7 @@ defmodule Amnesia.Table do
   @spec first!(atom) :: any | nil | no_return
   def first!(name) do
     case :mnesia.dirty_first(name) do
-      :'$end_of_table' -> nil
+      :"$end_of_table" -> nil
       value            -> value
     end
   end
@@ -605,7 +602,7 @@ defmodule Amnesia.Table do
   @spec next(atom, any) :: any | nil | no_return
   def next(name, key) do
     case :mnesia.next(name, key) do
-      :'$end_of_table' -> nil
+      :"$end_of_table" -> nil
       value            -> value
     end
   end
@@ -617,7 +614,7 @@ defmodule Amnesia.Table do
   @spec next!(atom, any) :: any | nil | no_return
   def next!(name, key) do
     case :mnesia.dirty_next(name, key) do
-      :'$end_of_table' -> nil
+      :"$end_of_table" -> nil
       value            -> value
     end
   end
@@ -629,7 +626,7 @@ defmodule Amnesia.Table do
   @spec prev(atom, any) :: any | nil | no_return
   def prev(name, key) do
     case :mnesia.prev(name, key) do
-      :'$end_of_table' -> nil
+      :"$end_of_table" -> nil
       value            -> value
     end
   end
@@ -641,7 +638,7 @@ defmodule Amnesia.Table do
   @spec prev!(atom, any) :: any | nil | no_return
   def prev!(name, key) do
     case :mnesia.dirty_prev(name, key) do
-      :'$end_of_table' -> nil
+      :"$end_of_table" -> nil
       value            -> value
     end
   end
@@ -652,7 +649,7 @@ defmodule Amnesia.Table do
   @spec last(atom) :: any | nil | no_return
   def last(name) do
     case :mnesia.last(name) do
-      :'$end_of_table' -> nil
+      :"$end_of_table" -> nil
       value            -> value
     end
   end
@@ -663,7 +660,7 @@ defmodule Amnesia.Table do
   @spec last!(atom) :: any | nil | no_return
   def last!(name) do
     case :mnesia.dirty_last(name) do
-      :'$end_of_table' -> nil
+      :"$end_of_table" -> nil
       value            -> value
     end
   end

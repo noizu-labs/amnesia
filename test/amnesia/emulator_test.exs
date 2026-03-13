@@ -43,7 +43,7 @@ defmodule Noizu.Emulator.AmnesiaTest do
   require Logger
   @moduletag :emulator
 
-  @mock_extension Code.ensure_compiled?(Mock)
+  @mock_extension match?({:module, _}, Code.ensure_compiled(Mock))
   if @mock_extension do
     import Mock
     setup_all do

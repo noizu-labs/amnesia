@@ -3,7 +3,7 @@ Code.require_file "../test_helper.exs", __DIR__
 use Amnesia
 
 defdatabase Test.Database do
-  @rock_extension Code.ensure_compiled?(:mnesia_rocksdb)
+  @rock_extension match?({:module, _}, Code.ensure_compiled(:mnesia_rocksdb))
   deftable User
 
 
@@ -63,7 +63,7 @@ defmodule DatabaseTest do
   alias Amnesia.Table.Stream
 
 
-  @rock_extension Code.ensure_compiled?(:mnesia_rocksdb)
+  @rock_extension match?({:module, _}, Code.ensure_compiled(:mnesia_rocksdb))
   if @rock_extension do
     test "rocksdb smoke test" do
       Test.Database.RockTable.destroy!()
@@ -259,8 +259,8 @@ defmodule DatabaseTest do
     end
 
     assert(Amnesia.transaction! do
-      assert Selection.values(User.select([{ { User, :'$1', :'$2', :_ },
-        [{ :'==', "John", :'$2' }], [:'$1'] }])) == [1]
+      assert Selection.values(User.select([{ { User, :"$1", :"$2", :_ },
+        [{ :"==", "John", :"$2" }], [:"$1"] }])) == [1]
     end == true)
   end
 
@@ -272,7 +272,7 @@ defmodule DatabaseTest do
     end
 
     assert(Amnesia.transaction! do
-      selection = User.select(1, [{ { User, :'$1', :_, :_ }, [], [:'$1'] }])
+      selection = User.select(1, [{ { User, :"$1", :_, :_ }, [], [:"$1"] }])
       assert Selection.values(selection) == [1]
 
       selection = Selection.next(selection)

@@ -3,7 +3,7 @@ defmodule Amnesia.Mixfile do
 
   def project do
     [ app: :amnesia,
-      version: "0.2.11",
+      version: "0.2.12",
       deps: deps(),
       package: package(),
       description: "mnesia wrapper for Elixir",
@@ -19,7 +19,7 @@ defmodule Amnesia.Mixfile do
 
   def application do
     test_deps = Mix.env == :test && [:mock] || []
-    [ applications: [:mnesia, :logger, :exquisite | test_deps] ]
+    [ applications: [:mnesia, :logger, :nexquisite | test_deps] ]
   end
 
   # Specifies which paths to compile per environment.
@@ -28,11 +28,11 @@ defmodule Amnesia.Mixfile do
 
   defp deps do
     [
-      {:exquisite, "~> 0.1.10" },
-      { :ex_doc, "~> 0.15", only: [:dev] },
+      {:nexquisite, "~> 0.1.11" },
+      {:ex_doc, "~> 0.15", only: [:dev] },
 
       {:sext, "~> 1.8.0", optional: true},
-      {:mnesia_rocksdb, github: "aeternity/mnesia_rocksdb", ref: "ab15b7f3990", optional: true},
+      {:mnesia_rocksdb, github: "aeternity/mnesia_rocksdb", ref: "a6567a217f54c40a36b2e4729ba30f1db08713bc", optional: true},
       {:mock, "~> 0.3.1", only: [:test], optional: true},
     ]
   end

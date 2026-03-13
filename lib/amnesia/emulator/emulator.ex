@@ -15,7 +15,7 @@ defmodule Amnesia.Emulator do
   ]
 
 
-  defmacro __using__(options \\ []) do
+  defmacro __using__(_options \\ []) do
     quote location: :keep do
       require Amnesia.Emulator
       import Amnesia.Emulator

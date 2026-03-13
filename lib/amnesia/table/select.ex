@@ -16,10 +16,10 @@ defmodule Amnesia.Table.Select do
   @doc """
   Get a selection from the various select results.
   """
-  @spec new(:'$end_of_table' | list | { list, any }) :: t | nil
+  @spec new(:"$end_of_table" | list | { list, any }) :: t | nil
   def new(value) do
     case value do
-      :'$end_of_table' -> nil
+      :"$end_of_table" -> nil
       []               -> nil
       { [], _ }        -> nil
 

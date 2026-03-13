@@ -18,7 +18,7 @@ defmodule Amnesia do
   end
 
   
-  @rock_extension Code.ensure_compiled?(:mnesia_rocksdb)
+  @rock_extension match?({:module, _}, Code.ensure_compiled(:mnesia_rocksdb))
   
   require Amnesia.Helper
 

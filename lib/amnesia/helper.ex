@@ -52,8 +52,11 @@ defmodule Amnesia.Helper do
         { :aborted, { :amnesia, { :cancel, result } } } ->
           result
 
-        { :aborted, { exception, stacktrace } } ->
+        { :aborted, { exception, stacktrace } } when is_list(stacktrace) ->
           reraise Exception.normalize(:error, exception), stacktrace
+
+        { :aborted, exception } when is_exception(exception) ->
+          raise exception
 
         { :aborted, error } ->
           throw error

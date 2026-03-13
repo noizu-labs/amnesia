@@ -95,7 +95,7 @@ defmodule Amnesia.Database do
           [ metadata() |> Metadata.destroy |
 
             Enum.map(@tables, fn(table) ->
-              table.destroy
+              table.destroy()
             end) ]
         end
 
@@ -108,7 +108,7 @@ defmodule Amnesia.Database do
           metadata() |> Metadata.destroy!
 
           Enum.each @tables, fn(table) ->
-            table.destroy!
+            table.destroy!()
           end
         end
 

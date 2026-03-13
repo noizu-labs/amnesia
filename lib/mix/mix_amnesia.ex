@@ -18,7 +18,7 @@ defmodule Mix.Amnesia do
       {:module, _} ->
         if function_exported?(module, :metadata, 0) do
 
-          unless %Amnesia.Metadata{database: module} == module.metadata do
+          unless %Amnesia.Metadata{database: module} == module.metadata() do
             Mix.raise "module #{module} is not an Amnesia.Database. " <>
                       "Please pass a proper database with the --database option."
           end
