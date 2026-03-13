@@ -31,7 +31,7 @@ defmodule Amnesia.Table.Definition do
 
   @doc false
   def match(module, pattern) do
-    [module | for { key, _ } <- module.attributes do
+    [module | for { key, _ } <- module.attributes() do
       if Keyword.has_key?(pattern, key), do: pattern[key], else: :_
     end] |> List.to_tuple
   end
@@ -429,14 +429,7 @@ defmodule Amnesia.Table.Definition do
           def read(key, lock \\ :read) do
             __MODULE__.telemetry_track(__MODULE__, :read)
             records = coerce(T.read(__MODULE__, key, lock))
-
-            case hook_read(key, records) do
-              :undefined ->
-                records
-
-              updated ->
-                updated
-            end
+            hook_read(key, records)
           end
 
           @doc """
@@ -446,14 +439,7 @@ defmodule Amnesia.Table.Definition do
           def read!(key) do
             __MODULE__.telemetry_track(__MODULE__, :read!)
             records = coerce(T.read!(__MODULE__, key))
-
-            case hook_read!(key, records) do
-              :undefined ->
-                records
-
-              updated ->
-                updated
-            end
+            hook_read!(key, records)
           end
         else
           @doc """
@@ -475,14 +461,7 @@ defmodule Amnesia.Table.Definition do
               [r] -> coerce(r)
               _   -> nil
             end
-
-            case hook_read(key, record) do
-              :undefined ->
-                record
-
-              updated ->
-                updated
-            end
+            hook_read(key, record)
           end
 
           @doc """
@@ -497,14 +476,7 @@ defmodule Amnesia.Table.Definition do
               [r] -> coerce(r)
               _   -> nil
             end
-
-            case hook_read!(key, record) do
-              :undefined ->
-                record
-
-              updated ->
-                updated
-            end
+            hook_read!(key, record)
           end
         end
 
@@ -932,16 +904,9 @@ defmodule Amnesia.Table.Definition do
         def write(self, lock \\ :write) do
           __MODULE__.telemetry_track(__MODULE__, :write)
           self = D.autoincrement(__MODULE__, @database, @autoincrement, self)
-
-          case hook_write(self) do
-            :undefined ->
-              T.write(__MODULE__, coerce(self), lock)
-              self
-
-            updated ->
-              T.write(__MODULE__, coerce(updated), lock)
-              updated
-          end
+          self = hook_write(self)
+          T.write(__MODULE__, coerce(self), lock)
+          self
         end
 
         @doc """
@@ -954,16 +919,9 @@ defmodule Amnesia.Table.Definition do
         def write!(self) do
           __MODULE__.telemetry_track(__MODULE__, :write!)
           self = D.autoincrement(__MODULE__, @database, @autoincrement, self)
-
-          case hook_write!(self) do
-            :undefined ->
-              T.write!(__MODULE__, coerce(self))
-              self
-
-            updated ->
-              T.write!(__MODULE__, coerce(updated))
-              updated
-          end
+          self = hook_write!(self)
+          T.write!(__MODULE__, coerce(self))
+          self
         end
 
 

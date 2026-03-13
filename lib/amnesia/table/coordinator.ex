@@ -7,35 +7,27 @@
 #  0. You just DO WHAT THE FUCK YOU WANT TO.
 
 defmodule Amnesia.Table.Coordinator do
-  def destroy!(table) do
+  def destroy!(_table) do
     # Attempt to sync for local table on remote node
   end
 
-  def destroy(table) do
+  def destroy(_table) do
     # Attempt to sync for local table on remote node
   end
 
-  def destroy!(table) do
+  def delete_index(_table, _arg) do
     # Attempt to sync for local table on remote node
   end
 
-  def destroy(table) do
+  def add_index(_table, _arg) do
     # Attempt to sync for local table on remote node
   end
 
-  def delete_index(table, arg) do
+  def create(_table, _arg \\ nil) do
     # Attempt to sync for local table on remote node
   end
 
-  def add_index(table, arg) do
-    # Attempt to sync for local table on remote node
-  end
-
-  def create(table, arg \\ nil) do
-    # Attempt to sync for local table on remote node
-  end
-
-  def create!(table, arg \\ nil) do
+  def create!(_table, _arg \\ nil) do
     # Attempt to sync for local table on remote node
   end
 

@@ -11,10 +11,8 @@ defmodule  Amnesia.Emulator.Table.Mock do
   import Amnesia.Emulator.Records
   #Record.defrecord(:record_state, [record: nil, exists?: true, history: []])
   #Record.defrecord(:table_state, [records: %{}, state: :online, history: []])
-  @blank_record %{record: nil, exists?: false, history: []}
-  @blank_table %{records: %{}, state: :online, history: []}
 
-  def __set_state__(config = emulator_session(emulator: emulator, table: table), state) do
+  def __set_state__(config = emulator_session(emulator: emulator, table: table), _state) do
     Agent.update(apply(emulator, :emulator_handle, [config]), fn(state) ->
       #&(put_in(&1, [Access.key(:tables), table], data))
       event = state.event + 1

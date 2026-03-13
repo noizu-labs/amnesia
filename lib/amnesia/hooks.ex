@@ -4,11 +4,18 @@ defmodule Amnesia.Hooks do
       quote(do: @hooks unquote(hooks)) |
 
       Enum.map(hooks, fn { name, arity } ->
-        args = Enum.map 1 .. arity, fn _ -> { :_, [], nil } end
+        args = Enum.map(1..arity, fn i ->
+          if i == arity do
+            Macro.var(:"arg#{i}", nil)
+          else
+            Macro.var(:"_arg#{i}", nil)
+          end
+        end)
+        last_arg = Macro.var(:"arg#{arity}", nil)
 
         quote do
           def unquote("hook_#{name}" |> String.to_atom)(unquote_splicing(args)) do
-            :undefined
+            unquote(last_arg)
           end
 
           defoverridable [{ unquote("hook_#{name}" |> String.to_atom), unquote(arity) }]
