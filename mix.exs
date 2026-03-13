@@ -29,10 +29,9 @@ defmodule Amnesia.Mixfile do
   defp deps do
     [
       {:nexquisite, "~> 0.1.11" },
-      {:ex_doc, "~> 0.15", only: [:dev] },
+      {:ex_doc, "~> 0.40", only: [:dev] },
 
       {:sext, "~> 1.8.0", optional: true},
-      {:mnesia_rocksdb, github: "aeternity/mnesia_rocksdb", ref: "a6567a217f54c40a36b2e4729ba30f1db08713bc", optional: true},
       {:mock, "~> 0.3.1", only: [:test], optional: true},
     ]
   end
